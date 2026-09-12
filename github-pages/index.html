@@ -6,8 +6,8 @@
   <meta name="theme-color" content="#020b16">
   <meta name="description" content="送给朱佳音的一份梦幻海底生日祝福。">
   <title>朱佳音，生日快乐</title>
-  <link rel="preload" href="./images/ocean-birthday.jpg" as="image">
-  <link rel="stylesheet" href="./style.css">
+  <link rel="preload" href="./images/ocean-birthday.jpg?v=20260913-1" as="image">
+  <link rel="stylesheet" href="./style.css?v=20260913-1">
 </head>
 <body>
   <canvas id="ambient" class="ambient" aria-hidden="true"></canvas>
@@ -97,13 +97,13 @@
         <h2>让五只水母，<br>为她点亮生日烛光。</h2>
         <p>依次轻触每一只水母。全部亮起后，生日歌和最后一份礼物就会出现。</p>
       </div>
-      <div class="ritual__stage reveal-image" id="ritual-stage">
+      <div class="ritual__stage" id="ritual-stage">
         <img src="./images/ocean-birthday.jpg" alt="白鲸、生日蛋糕和五只水母">
-        <button class="jelly jelly--1" type="button" aria-label="点亮第一只水母"><i></i></button>
-        <button class="jelly jelly--2" type="button" aria-label="点亮第二只水母"><i></i></button>
-        <button class="jelly jelly--3" type="button" aria-label="点亮第三只水母"><i></i></button>
-        <button class="jelly jelly--4" type="button" aria-label="点亮第四只水母"><i></i></button>
-        <button class="jelly jelly--5" type="button" aria-label="点亮第五只水母"><i></i></button>
+        <button class="jelly jelly--1" type="button" aria-label="点亮第一只水母"><i></i><span>1</span></button>
+        <button class="jelly jelly--2" type="button" aria-label="点亮第二只水母"><i></i><span>2</span></button>
+        <button class="jelly jelly--3" type="button" aria-label="点亮第三只水母"><i></i><span>3</span></button>
+        <button class="jelly jelly--4" type="button" aria-label="点亮第四只水母"><i></i><span>4</span></button>
+        <button class="jelly jelly--5" type="button" aria-label="点亮第五只水母"><i></i><span>5</span></button>
         <div class="ritual__progress" aria-live="polite"><strong id="lit-count">0</strong><span>/ 5</span></div>
         <div class="ritual__complete" id="ritual-complete" aria-live="polite">
           <p>生日烛光已经全部亮起</p>
@@ -145,6 +145,6 @@
       </div>
     </section>
   </main>
-  <script src="./script.js"></script>
+  <script src="./script.js?v=20260913-1"></script>
 </body>
 </html>

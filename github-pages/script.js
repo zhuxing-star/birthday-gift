@@ -98,7 +98,7 @@ async function startMusic() {
   await audioContext.resume(); isMusicOn = true;
   masterGain.gain.cancelScheduledValues(audioContext.currentTime);
   masterGain.gain.setValueAtTime(Math.max(masterGain.gain.value, 0.0001), audioContext.currentTime);
-  masterGain.gain.exponentialRampToValueAtTime(0.07, audioContext.currentTime + 0.8);
+  masterGain.gain.exponentialRampToValueAtTime(0.11, audioContext.currentTime + 0.8);
   clearInterval(ambientTimer); clearInterval(birthdayTimer);
   if (musicMode === 'ambient') { playAmbientPhrase(); ambientTimer = setInterval(playAmbientPhrase, 4800); }
   else { playBirthdaySong(); birthdayTimer = setInterval(playBirthdaySong, 15000); }
