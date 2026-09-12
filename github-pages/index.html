@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#061720">
+  <meta name="description" content="把一起看过的风景，送给今天的你。">
+  <title>给你的生日礼物</title>
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body class="locked">
+  <main>
+    <section class="gift-cover">
+      <img src="./images/birthday-star.jpg" alt="" class="gift-cover__image">
+      <div class="gift-cover__shade"></div>
+      <div class="gift-cover__content">
+        <p class="eyebrow">A little gift for you</p>
+        <h1>有一份特别的礼物</h1>
+        <p>把今天的第一份好心情，轻轻打开。</p>
+        <button type="button" id="open-gift">打开礼物 <span aria-hidden="true">↗</span></button>
+      </div>
+    </section>
+
+    <section class="hero" id="top">
+      <div class="hero__glow hero__glow--one"></div><div class="hero__glow hero__glow--two"></div>
+      <div class="hero__copy reveal">
+        <p class="eyebrow">Today is all about you</p>
+        <h2><span>Happy</span><br>Birthday</h2>
+        <p class="hero__wish">愿这一天，所有温柔与惊喜都恰好奔向你。</p>
+        <a href="#memories">看看我们收藏的时光 <span aria-hidden="true">↓</span></a>
+      </div>
+      <figure class="hero__portrait reveal">
+        <div class="hero__frame"><img src="./images/birthday-star.jpg" alt="寿星在树下抱着尤克里里"></div>
+        <figcaption>愿你永远自在、明亮，也永远保有对世界的好奇。</figcaption>
+      </figure>
+      <p class="hero__year" aria-hidden="true">FOR YOU</p>
+    </section>
+
+    <section class="intro-note">
+      <p class="eyebrow">Our tiny universe</p>
+      <h2>有些风景，因为一起看过，<br>便有了独一无二的名字。</h2>
+      <p>把散落在相册里的蓝色、绿色和阳光，重新串成一条通往今天的小路。</p>
+    </section>
+
+    <section class="memories" id="memories" aria-label="一起看过的风景">
+      <article class="memory memory--1">
+        <div class="memory__photo"><img src="./images/jellyfish.jpg" alt="像一场安静的烟花" loading="lazy"><span>01</span></div>
+        <div class="memory__copy"><p>Memory 01</p><h3>像一场安静的烟花</h3><p>水母在蓝色里缓缓漂浮，那一刻，时间也变得很轻。</p></div>
+      </article>
+      <article class="memory memory--2">
+        <div class="memory__photo"><img src="./images/beluga.jpg" alt="一起等它游过" loading="lazy"><span>02</span></div>
+        <div class="memory__copy"><p>Memory 02</p><h3>一起等它游过</h3><p>隔着人群看见白鲸，也把这一小段蓝色的记忆留了下来。</p></div>
+      </article>
+      <article class="memory memory--3">
+        <div class="memory__photo"><img src="./images/forest.jpg" alt="走进会呼吸的森林" loading="lazy"><span>03</span></div>
+        <div class="memory__copy"><p>Memory 03</p><h3>走进会呼吸的森林</h3><p>灯光落在树叶和水面上，像误入了另一个秘密世界。</p></div>
+      </article>
+      <article class="memory memory--4">
+        <div class="memory__photo"><img src="./images/lizard.jpg" alt="还有这位小小探险家" loading="lazy"><span>04</span></div>
+        <div class="memory__copy"><p>Memory 04</p><h3>还有这位小小探险家</h3><p>认真晒太阳的样子，让普通的一天也多了一点可爱。</p></div>
+      </article>
+    </section>
+
+    <section class="letter">
+      <div class="letter__paper">
+        <p class="eyebrow">A birthday note</p><h2>写给今天的你</h2>
+        <div class="letter__body">
+          <p>又认真地生活了一岁，辛苦啦。</p>
+          <p>愿新的一岁，不必总是追赶时间。想看的风景慢慢看，想做的事情大胆做，累了就停下来歇一歇。</p>
+          <p>愿你眼里常有光，身边常有温柔；也愿未来还有很多很多这样的时刻——我们一起出发，一起看见，一起把平凡的日子收藏起来。</p>
+          <p>生日快乐。愿所有美好，都比约定更早抵达。</p>
+        </div>
+        <p class="letter__sign">— 陪你看风景的人</p>
+      </div>
+    </section>
+
+    <section class="finale" id="finale">
+      <div class="sparkles" aria-hidden="true"></div>
+      <p class="eyebrow">Make a wish</p><h2 id="wish-title">最后，许个愿吧</h2>
+      <button type="button" class="cake" id="light-wish" aria-label="点亮生日祝福">
+        <span class="cake__flame" aria-hidden="true"></span><span class="cake__candle" aria-hidden="true"></span>
+        <span class="cake__top" aria-hidden="true"></span><span class="cake__body" aria-hidden="true"></span>
+      </button>
+      <p id="wish-copy">轻轻点一下蜡烛</p><a href="#top" id="replay">再看一遍</a>
+    </section>
+  </main>
+  <script src="./script.js"></script>
+</body>
+</html>
