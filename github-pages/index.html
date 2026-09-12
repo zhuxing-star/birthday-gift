@@ -3,141 +3,148 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#06131f">
-  <meta name="description" content="静候佳音——送给朱佳音的一份生日祝福。">
-  <title>静候佳音｜朱佳音生日快乐</title>
+  <meta name="theme-color" content="#020b16">
+  <meta name="description" content="送给朱佳音的一份梦幻海底生日祝福。">
+  <title>朱佳音，生日快乐</title>
+  <link rel="preload" href="./images/ocean-birthday.jpg" as="image">
   <link rel="stylesheet" href="./style.css">
 </head>
-<body class="is-locked">
-  <canvas class="ambient" id="ambient" aria-hidden="true"></canvas>
-
-  <section class="portal" id="portal" aria-label="生日礼物开场">
-    <div class="portal__photo" aria-hidden="true"></div>
-    <div class="portal__veil"></div>
-    <div class="portal__rings" aria-hidden="true"><i></i><i></i><i></i></div>
-    <div class="portal__content">
-      <p class="micro">A MESSAGE IS ON ITS WAY</p>
-      <h1><span>静候</span><em>佳音</em></h1>
-      <p class="portal__to">To 朱佳音</p>
-      <p class="portal__line">请安静一会儿。<br>有一声佳音，正穿过星海向你而来。</p>
-      <button class="enter" id="enter" type="button">
-        <span class="enter__icon" aria-hidden="true"><i></i><i></i><i></i></span>
-        <span>戴上耳机 · 开始聆听</span>
-      </button>
-    </div>
-    <p class="portal__hint">点击后将播放音乐</p>
-  </section>
-
-  <button class="sound" id="sound" type="button" aria-label="暂停背景音乐" hidden>
+<body>
+  <canvas id="ambient" class="ambient" aria-hidden="true"></canvas>
+  <button class="sound" id="sound" type="button" aria-label="暂停音乐" hidden>
     <span class="sound__bars" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
-    <span class="sound__label">佳音播放中</span>
+    <span class="sound__text">音乐</span>
   </button>
 
   <main>
-    <section class="hero" id="home">
-      <div class="hero__photo" data-parallax="0.12"></div>
-      <div class="hero__wash"></div>
-      <div class="hero__orbit" aria-hidden="true"><i></i><i></i><i></i></div>
-      <div class="hero__content">
-        <p class="micro reveal">THE GOOD NEWS HAS ARRIVED</p>
-        <h2 class="reveal"><span>朱</span><span>佳</span><span>音</span></h2>
-        <div class="hero__wish reveal">
-          <p>今天，世界把所有好消息<br>都写成了你的名字。</p>
-          <strong>生日快乐</strong>
+    <section class="invitation" id="top" aria-label="生日邀请">
+      <img class="invitation__art" src="./images/ocean-birthday.jpg" alt="深蓝海水中，一只白鲸游向生日蛋糕和五只发光的水母">
+      <div class="invitation__shade"></div>
+      <div class="invitation__caustics" aria-hidden="true"></div>
+      <div class="invitation__content">
+        <p class="kicker">A BIRTHDAY INVITATION · 2026</p>
+        <h1><span>朱佳音</span><strong>生日快乐</strong></h1>
+        <p class="invitation__date">农历九月十九</p>
+        <div class="countdown" id="countdown" aria-label="生日倒计时">
+          <div><strong id="days">--</strong><span>天</span></div>
+          <div><strong id="hours">--</strong><span>时</span></div>
+          <div><strong id="minutes">--</strong><span>分</span></div>
+          <div><strong id="seconds">--</strong><span>秒</span></div>
         </div>
+        <p class="countdown__caption" id="countdown-caption">距离她的生日还有</p>
+        <button class="open-invitation" id="open-invitation" type="button">
+          <span>拆开这份生日邀请</span><i aria-hidden="true">↓</i>
+        </button>
       </div>
-      <a class="scroll-cue" href="#prologue" aria-label="继续向下浏览"><i></i><span>继续聆听</span></a>
+      <a class="skip" href="#journey">提前看看生日旅程</a>
     </section>
 
-    <section class="prologue" id="prologue">
-      <div class="prologue__line" aria-hidden="true"><i></i></div>
-      <p class="micro reveal">WAITING / MEETING / REMEMBERING</p>
-      <h2 class="reveal">我们曾在不同的风景里，<br><em>静候</em>过不同的相遇。</h2>
-      <p class="prologue__copy reveal">等水母游近，等白鲸转身，等森林的灯亮起。<br>而今天，我们只等一句——</p>
-      <p class="prologue__answer reveal">“朱佳音，生日快乐。”</p>
+    <section class="journey" id="journey">
+      <div class="journey__copy reveal">
+        <p class="kicker">ONE HAPPY DAY</p>
+        <h2>后来再看这些照片，<br>那天还是让人觉得很开心。</h2>
+        <p>没有非要记住的某个瞬间。只是一路走走看看、随便聊天，原本普通的一天，也就这样被好好保存了下来。</p>
+      </div>
+      <div class="journey__line" aria-hidden="true"><i></i></div>
     </section>
 
-    <section class="chapters" aria-label="一起看过的世界">
-      <article class="chapter chapter--ocean">
-        <figure class="chapter__visual reveal-image">
-          <img src="./images/jellyfish.jpg" alt="蓝色水族箱里的水母" loading="lazy" data-parallax="0.05">
-          <span class="chapter__number">01</span>
-          <div class="chapter__halo" aria-hidden="true"></div>
+    <section class="memories" aria-label="一起看过的风景">
+      <article class="memory memory--jellyfish">
+        <figure class="memory__image reveal-image">
+          <img src="./images/jellyfish.jpg" alt="蓝色水族箱里发光的水母" loading="lazy">
+          <figcaption><span>01</span><p>那天的蓝色，从这里开始。</p></figcaption>
         </figure>
-        <div class="chapter__text reveal">
-          <p class="micro">A QUIET FIREWORK</p>
-          <h3>等一场<br>安静的烟花</h3>
-          <p>水母在蓝色里缓缓升起，像把喧闹的世界调成了静音。那一刻没有声音，却很好听。</p>
+        <div class="memory__words reveal">
+          <p class="kicker">AQUARIUM / 01</p><h3>像一场漂浮的烟花</h3>
+          <p>水母在光里慢慢升起。我们站在玻璃外面，看它们把整个水族箱变成一小片星空。</p>
         </div>
       </article>
-
-      <article class="chapter chapter--beluga">
-        <figure class="chapter__visual reveal-image">
-          <img src="./images/beluga.jpg" alt="人群前方游过的白鲸" loading="lazy" data-parallax="0.08">
-          <span class="chapter__number">02</span>
-          <div class="chapter__echo" aria-hidden="true"><i></i><i></i><i></i></div>
+      <article class="memory memory--beluga">
+        <figure class="memory__image reveal-image">
+          <img src="./images/beluga.jpg" alt="人群前方游过的白鲸" loading="lazy">
+          <figcaption><span>02</span><p>白鲸从人群前游过。</p></figcaption>
         </figure>
-        <div class="chapter__text reveal">
-          <p class="micro">IN A SEA OF PEOPLE</p>
-          <h3>等它游过，<br>也等你看见</h3>
-          <p>隔着人群，白鲸从深蓝里靠近。我们举起相机，也把这一秒认真地留给了以后。</p>
+        <div class="memory__words reveal">
+          <p class="kicker">AQUARIUM / 02</p><h3>等它靠近，再挥挥手</h3>
+          <p>隔着深蓝色的水和一排举起的相机，它还是游到了眼前。现在，它也赶来参加这场生日。</p>
         </div>
       </article>
-
-      <article class="chapter chapter--forest">
-        <figure class="chapter__visual reveal-image">
-          <img src="./images/forest.jpg" alt="灯光下的森林与水面" loading="lazy" data-parallax="0.06">
-          <span class="chapter__number">03</span>
-          <span class="chapter__firefly f1" aria-hidden="true"></span><span class="chapter__firefly f2" aria-hidden="true"></span><span class="chapter__firefly f3" aria-hidden="true"></span>
+      <article class="memory memory--forest">
+        <figure class="memory__image reveal-image">
+          <img src="./images/forest.jpg" alt="灯光下的森林与水面" loading="lazy">
+          <figcaption><span>03</span><p>一路走走看看。</p></figcaption>
         </figure>
-        <div class="chapter__text reveal">
-          <p class="micro">THE FOREST BREATHES</p>
-          <h3>等森林亮起<br>温柔的灯</h3>
-          <p>树叶、流水和悬在半空的微光，像一封没有落款的信。幸好，我们一起读懂了它。</p>
+        <div class="memory__words reveal">
+          <p class="kicker">AQUARIUM / 03</p><h3>拐进一片会发光的森林</h3>
+          <p>树叶、流水和悬在半空的光球，让水族馆里又多了一个意外的小世界。</p>
         </div>
       </article>
-
-      <article class="chapter chapter--lizard">
-        <figure class="chapter__visual reveal-image">
-          <img src="./images/lizard.jpg" alt="岩石上晒太阳的蜥蜴" loading="lazy" data-parallax="0.04">
-          <span class="chapter__number">04</span>
+      <article class="memory memory--lizard">
+        <figure class="memory__image reveal-image">
+          <img src="./images/lizard.jpg" alt="岩石上晒太阳的蜥蜴" loading="lazy">
+          <figcaption><span>04</span><p>还有认真晒太阳的它。</p></figcaption>
         </figure>
-        <div class="chapter__text reveal">
-          <p class="micro">A LITTLE SURPRISE</p>
-          <h3>等生活忽然<br>冒出一点可爱</h3>
-          <p>也许最好的回忆，并不需要盛大的安排。只是刚好遇见，刚好觉得有趣，刚好身边是你。</p>
+        <div class="memory__words reveal">
+          <p class="kicker">AQUARIUM / 04</p><h3>遇见一点意料之外的可爱</h3>
+          <p>后来想想，开心大概就是这样：没有特别安排，却总有值得停下来多看一眼的东西。</p>
         </div>
       </article>
     </section>
 
-    <section class="letter">
-      <div class="letter__stars" aria-hidden="true"></div>
-      <div class="letter__content">
-        <p class="micro reveal">THE MESSAGE / 佳音已至</p>
-        <h2 class="reveal">写给<br><span>朱佳音</span></h2>
-        <div class="letter__body reveal">
-          <p>又认真地生活了一岁，辛苦啦。</p>
-          <p>愿新的一岁，不必总是追赶时间。想看的风景慢慢看，想做的事情大胆做，累了就停下来歇一歇。</p>
-          <p>愿你眼里常有光，身边常有温柔；也愿未来还有很多这样的时刻——一起出发，一起看见，一起把平凡的日子收藏起来。</p>
-          <p>愿你不必静候太久，想要的佳音都会如约而至。</p>
+    <section class="ritual" id="ritual">
+      <div class="ritual__intro reveal">
+        <p class="kicker">MAKE FIVE LITTLE WISHES</p>
+        <h2>让五只水母，<br>为她点亮生日烛光。</h2>
+        <p>依次轻触每一只水母。全部亮起后，生日歌和最后一份礼物就会出现。</p>
+      </div>
+      <div class="ritual__stage reveal-image" id="ritual-stage">
+        <img src="./images/ocean-birthday.jpg" alt="白鲸、生日蛋糕和五只水母">
+        <button class="jelly jelly--1" type="button" aria-label="点亮第一只水母"><i></i></button>
+        <button class="jelly jelly--2" type="button" aria-label="点亮第二只水母"><i></i></button>
+        <button class="jelly jelly--3" type="button" aria-label="点亮第三只水母"><i></i></button>
+        <button class="jelly jelly--4" type="button" aria-label="点亮第四只水母"><i></i></button>
+        <button class="jelly jelly--5" type="button" aria-label="点亮第五只水母"><i></i></button>
+        <div class="ritual__progress" aria-live="polite"><strong id="lit-count">0</strong><span>/ 5</span></div>
+        <div class="ritual__complete" id="ritual-complete" aria-live="polite">
+          <p>生日烛光已经全部亮起</p>
+          <button id="reveal-gift" type="button">打开最后一份礼物</button>
         </div>
-        <p class="letter__signature reveal">— 陪你看风景的人</p>
       </div>
     </section>
 
     <section class="finale" id="finale">
-      <div class="finale__ripple" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
-      <div class="finale__content">
-        <p class="micro reveal">ONE LAST MESSAGE</p>
-        <h2 class="reveal">朱佳音<br><em>生日快乐</em></h2>
-        <p class="finale__copy reveal" id="final-copy">这一次，不必再等。<br>所有祝福，已经抵达。</p>
-        <button class="receive reveal" id="receive" type="button"><span>接住这份佳音</span><i aria-hidden="true"></i></button>
-        <p class="finale__after" id="final-after" aria-live="polite"></p>
+      <img class="finale__portrait" src="./images/birthday-star.jpg" alt="朱佳音在树下抱着尤克里里">
+      <div class="finale__veil"></div>
+      <div class="finale__headline reveal">
+        <p class="kicker">HAPPY BIRTHDAY, JIAYIN</p>
+        <h2>朱佳音<br><strong>生日快乐</strong></h2>
       </div>
-      <div class="petals" id="petals" aria-hidden="true"></div>
+    </section>
+
+    <section class="letter" id="letter">
+      <article class="letter__paper reveal">
+        <p class="kicker">A LETTER FOR YOUR NEW YEAR</p>
+        <h2>佳音，生日快乐。</h2>
+        <div class="letter__body">
+          <p>后来再翻到这些照片，才发现那天留在记忆里的，不只是水母、白鲸和一路见到的动物，还有边走边聊时那种很轻松的感觉。原本只是一次普通的出游，因为同行的人不同，也就成了值得记住的一天。</p>
+          <p>你安静、温柔，也一直有自己的想法。希望新一岁的你，可以自由地走自己想走的路，拥有很多简单的快乐；也希望你的善良总能得到温柔的回应，期待的事情都慢慢传来好消息。</p>
+          <p>生日快乐。</p>
+        </div>
+        <p class="letter__signature">逐星</p>
+      </article>
+    </section>
+
+    <section class="ending" id="ending">
+      <div class="ending__rings" aria-hidden="true"><i></i><i></i><i></i></div>
+      <div class="ending__content reveal">
+        <p class="kicker">THE END · AND A NEW BEGINNING</p>
+        <h2>静候佳音</h2>
+        <p>愿你自由、快乐，善良总被温柔回应。<br>愿所有认真等待的事情，都迎来好消息。</p>
+        <span>农历九月十九 · 逐星</span>
+        <a href="#top">再看一遍</a>
+      </div>
     </section>
   </main>
-
   <script src="./script.js"></script>
 </body>
 </html>

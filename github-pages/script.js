@@ -1,229 +1,174 @@
-const portal = document.querySelector('#portal');
-const enterButton = document.querySelector('#enter');
+const birthday = new Date('2026-10-28T00:00:00+08:00');
+const countdownNodes = {
+  days: document.querySelector('#days'), hours: document.querySelector('#hours'),
+  minutes: document.querySelector('#minutes'), seconds: document.querySelector('#seconds'),
+};
+const countdownCaption = document.querySelector('#countdown-caption');
+const openInvitation = document.querySelector('#open-invitation');
 const soundButton = document.querySelector('#sound');
-const soundLabel = soundButton.querySelector('.sound__label');
-const finale = document.querySelector('#finale');
-const receiveButton = document.querySelector('#receive');
-const finalAfter = document.querySelector('#final-after');
-const petals = document.querySelector('#petals');
+const soundText = soundButton.querySelector('.sound__text');
+const jellyButtons = [...document.querySelectorAll('.jelly')];
+const litCount = document.querySelector('#lit-count');
+const ritualStage = document.querySelector('#ritual-stage');
+const ritualComplete = document.querySelector('#ritual-complete');
+const revealGift = document.querySelector('#reveal-gift');
+
+function updateCountdown() {
+  const remaining = birthday.getTime() - Date.now();
+  if (remaining <= 0) {
+    Object.values(countdownNodes).forEach((node) => { node.textContent = '00'; });
+    countdownCaption.textContent = '今天，祝朱佳音生日快乐';
+    return;
+  }
+  const day = 86400000;
+  const hour = 3600000;
+  const minute = 60000;
+  countdownNodes.days.textContent = String(Math.floor(remaining / day)).padStart(2, '0');
+  countdownNodes.hours.textContent = String(Math.floor((remaining % day) / hour)).padStart(2, '0');
+  countdownNodes.minutes.textContent = String(Math.floor((remaining % hour) / minute)).padStart(2, '0');
+  countdownNodes.seconds.textContent = String(Math.floor((remaining % minute) / 1000)).padStart(2, '0');
+}
+updateCountdown();
+setInterval(updateCountdown, 1000);
 
 let audioContext;
 let masterGain;
-let delayNode;
-let feedbackGain;
-let musicTimer;
-let chordIndex = 0;
+let ambientTimer;
+let birthdayTimer;
+let musicMode = 'ambient';
 let isMusicOn = false;
+let ambientStep = 0;
 
-const chords = [
-  [261.63, 329.63, 392.0],
-  [220.0, 261.63, 329.63],
-  [174.61, 220.0, 261.63],
-  [196.0, 246.94, 293.66],
-];
-const melodies = [523.25, 659.25, 783.99, 659.25, 587.33, 523.25, 440.0, 493.88];
-
-function prepareAudio() {
+function setupAudio() {
   if (audioContext) return;
   const AudioEngine = window.AudioContext || window.webkitAudioContext;
   if (!AudioEngine) return;
-
   audioContext = new AudioEngine();
   masterGain = audioContext.createGain();
-  delayNode = audioContext.createDelay(2.2);
-  feedbackGain = audioContext.createGain();
-  const filter = audioContext.createBiquadFilter();
-
+  const lowpass = audioContext.createBiquadFilter();
+  const delay = audioContext.createDelay(2);
+  const feedback = audioContext.createGain();
   masterGain.gain.value = 0.0001;
-  delayNode.delayTime.value = 0.42;
-  feedbackGain.gain.value = 0.22;
-  filter.type = 'lowpass';
-  filter.frequency.value = 2300;
-
-  masterGain.connect(filter);
-  filter.connect(audioContext.destination);
-  filter.connect(delayNode);
-  delayNode.connect(feedbackGain);
-  feedbackGain.connect(delayNode);
-  delayNode.connect(audioContext.destination);
+  lowpass.type = 'lowpass'; lowpass.frequency.value = 2600;
+  delay.delayTime.value = 0.34; feedback.gain.value = 0.2;
+  masterGain.connect(lowpass); lowpass.connect(audioContext.destination); lowpass.connect(delay);
+  delay.connect(feedback); feedback.connect(delay); delay.connect(audioContext.destination);
 }
 
-function makeTone(frequency, start, duration, volume, type = 'sine') {
+function tone(frequency, start, duration, volume, type = 'sine') {
   if (!audioContext || !masterGain) return;
   const oscillator = audioContext.createOscillator();
   const envelope = audioContext.createGain();
-  oscillator.type = type;
-  oscillator.frequency.setValueAtTime(frequency, start);
-  oscillator.detune.setValueAtTime((Math.random() - 0.5) * 5, start);
+  oscillator.type = type; oscillator.frequency.setValueAtTime(frequency, start);
   envelope.gain.setValueAtTime(0.0001, start);
-  envelope.gain.exponentialRampToValueAtTime(volume, start + Math.min(.55, duration * .25));
+  envelope.gain.exponentialRampToValueAtTime(volume, start + Math.min(0.08, duration * 0.2));
   envelope.gain.exponentialRampToValueAtTime(0.0001, start + duration);
-  oscillator.connect(envelope);
-  envelope.connect(masterGain);
-  oscillator.start(start);
-  oscillator.stop(start + duration + .1);
+  oscillator.connect(envelope); envelope.connect(masterGain);
+  oscillator.start(start); oscillator.stop(start + duration + 0.05);
 }
 
-function scheduleMusic() {
-  if (!audioContext || !isMusicOn) return;
-  const now = audioContext.currentTime + .08;
-  const chord = chords[chordIndex % chords.length];
-  chord.forEach((note, index) => makeTone(note / 2, now + index * .07, 6.4, .12, index === 1 ? 'triangle' : 'sine'));
+const ambientChords = [[130.81,196,261.63],[110,164.81,220],[146.83,220,293.66],[98,146.83,196]];
+function playAmbientPhrase() {
+  if (!isMusicOn || musicMode !== 'ambient') return;
+  const now = audioContext.currentTime + 0.05;
+  const chord = ambientChords[ambientStep % ambientChords.length];
+  chord.forEach((note, index) => tone(note, now + index * 0.08, 5.6, 0.08, index === 1 ? 'triangle' : 'sine'));
+  tone(chord[2] * 2, now + 1.4, 1.8, 0.045); tone(chord[1] * 2, now + 3.2, 1.5, 0.038);
+  ambientStep += 1;
+}
 
-  for (let beat = 0; beat < 4; beat += 1) {
-    const note = melodies[(chordIndex * 2 + beat) % melodies.length];
-    makeTone(note, now + .45 + beat * 1.02, 1.65, .08, 'sine');
-  }
-  chordIndex += 1;
+const birthdayNotes = [
+  [392,.38],[392,.2],[440,.62],[392,.62],[523.25,.62],[493.88,1.2],
+  [392,.38],[392,.2],[440,.62],[392,.62],[587.33,.62],[523.25,1.2],
+  [392,.38],[392,.2],[783.99,.62],[659.25,.62],[523.25,.62],[493.88,.62],[440,1.2],
+  [698.46,.38],[698.46,.2],[659.25,.62],[523.25,.62],[587.33,.62],[523.25,1.3],
+];
+function playBirthdaySong() {
+  if (!isMusicOn || musicMode !== 'birthday') return;
+  let cursor = audioContext.currentTime + 0.12;
+  birthdayNotes.forEach(([note, duration]) => {
+    tone(note, cursor, duration * 0.92, 0.12); tone(note * 2, cursor, duration * 0.55, 0.025, 'triangle');
+    cursor += duration;
+  });
 }
 
 async function startMusic() {
-  prepareAudio();
-  if (!audioContext) {
-    soundLabel.textContent = '浏览祝福';
-    return;
-  }
-  await audioContext.resume();
-  isMusicOn = true;
+  setupAudio();
+  if (!audioContext) return;
+  await audioContext.resume(); isMusicOn = true;
   masterGain.gain.cancelScheduledValues(audioContext.currentTime);
-  masterGain.gain.setValueAtTime(Math.max(masterGain.gain.value, .0001), audioContext.currentTime);
-  masterGain.gain.exponentialRampToValueAtTime(.075, audioContext.currentTime + 1.1);
-  scheduleMusic();
-  clearInterval(musicTimer);
-  musicTimer = window.setInterval(scheduleMusic, 4200);
-  soundButton.classList.remove('is-muted');
-  soundButton.setAttribute('aria-label', '暂停背景音乐');
-  soundLabel.textContent = '佳音播放中';
+  masterGain.gain.setValueAtTime(Math.max(masterGain.gain.value, 0.0001), audioContext.currentTime);
+  masterGain.gain.exponentialRampToValueAtTime(0.07, audioContext.currentTime + 0.8);
+  clearInterval(ambientTimer); clearInterval(birthdayTimer);
+  if (musicMode === 'ambient') { playAmbientPhrase(); ambientTimer = setInterval(playAmbientPhrase, 4800); }
+  else { playBirthdaySong(); birthdayTimer = setInterval(playBirthdaySong, 15000); }
+  soundButton.hidden = false; soundButton.classList.remove('is-muted');
+  soundButton.setAttribute('aria-label', '暂停音乐'); soundText.textContent = musicMode === 'birthday' ? '生日歌' : '音乐';
 }
 
 function pauseMusic() {
   if (!audioContext) return;
-  isMusicOn = false;
-  clearInterval(musicTimer);
+  isMusicOn = false; clearInterval(ambientTimer); clearInterval(birthdayTimer);
   masterGain.gain.cancelScheduledValues(audioContext.currentTime);
-  masterGain.gain.exponentialRampToValueAtTime(.0001, audioContext.currentTime + .55);
-  soundButton.classList.add('is-muted');
-  soundButton.setAttribute('aria-label', '播放背景音乐');
-  soundLabel.textContent = '佳音已暂停';
+  masterGain.gain.exponentialRampToValueAtTime(0.0001, audioContext.currentTime + 0.35);
+  soundButton.classList.add('is-muted'); soundButton.setAttribute('aria-label', '播放音乐'); soundText.textContent = '已暂停';
 }
 
-function playFinalChime() {
-  if (!isMusicOn || !audioContext) return;
-  const start = audioContext.currentTime + .05;
-  [523.25, 659.25, 783.99, 1046.5].forEach((note, index) => {
-    makeTone(note, start + index * .18, 2.2, .16, 'sine');
-  });
+function switchToBirthdaySong() {
+  musicMode = 'birthday'; clearInterval(ambientTimer);
+  if (isMusicOn) { playBirthdaySong(); birthdayTimer = setInterval(playBirthdaySong, 15000); soundText.textContent = '生日歌'; }
 }
 
-enterButton.addEventListener('click', async () => {
-  await startMusic();
-  portal.classList.add('is-open');
-  document.body.classList.remove('is-locked');
-  soundButton.hidden = false;
+openInvitation.addEventListener('click', async () => {
+  await startMusic(); document.querySelector('#journey').scrollIntoView({ behavior: 'smooth' });
 });
+soundButton.addEventListener('click', () => { if (isMusicOn) pauseMusic(); else startMusic(); });
 
-soundButton.addEventListener('click', () => {
-  if (isMusicOn) pauseMusic();
-  else startMusic();
-});
-
-// Elements reveal only when their chapter reaches the listener.
-const observer = new IntersectionObserver((entries) => {
-  entries.forEach((entry) => {
-    if (entry.isIntersecting) {
-      entry.target.classList.add('is-visible');
-      observer.unobserve(entry.target);
+let lights = 0;
+jellyButtons.forEach((button) => {
+  button.addEventListener('click', async () => {
+    if (button.classList.contains('is-lit')) return;
+    if (!audioContext) await startMusic();
+    button.classList.add('is-lit'); lights += 1; litCount.textContent = String(lights);
+    if (audioContext && isMusicOn) tone([523.25,587.33,659.25,783.99,880][lights - 1], audioContext.currentTime + 0.03, 1.4, 0.1);
+    if (lights === jellyButtons.length) {
+      ritualStage.classList.add('is-complete'); ritualComplete.classList.add('is-visible');
+      setTimeout(switchToBirthdaySong, 650);
     }
   });
-}, { threshold: .13, rootMargin: '0px 0px -8% 0px' });
-
-document.querySelectorAll('.reveal, .reveal-image').forEach((element) => observer.observe(element));
-
-// A small, bounded parallax layer keeps the supplied photographs alive on touch screens.
-const parallaxItems = [...document.querySelectorAll('[data-parallax]')];
-let framePending = false;
-function updateParallax() {
-  const viewportCenter = window.innerHeight / 2;
-  parallaxItems.forEach((element) => {
-    const rect = element.parentElement.getBoundingClientRect();
-    if (rect.bottom < -120 || rect.top > window.innerHeight + 120) return;
-    const rate = Number(element.dataset.parallax || 0);
-    const offset = Math.max(-55, Math.min(55, (rect.top + rect.height / 2 - viewportCenter) * rate));
-    const scale = element.classList.contains('hero__photo') ? 1.08 : 1.12;
-    element.style.transform = `translate3d(0, ${offset}px, 0) scale(${scale})`;
-  });
-  framePending = false;
-}
-window.addEventListener('scroll', () => {
-  if (!framePending) {
-    framePending = true;
-    requestAnimationFrame(updateParallax);
-  }
-}, { passive: true });
-updateParallax();
-
-function releasePetals() {
-  petals.replaceChildren();
-  const colors = ['#e7bd74', '#ed9ead', '#c9eef2', '#f7f2e8'];
-  for (let index = 0; index < 76; index += 1) {
-    const petal = document.createElement('i');
-    petal.style.setProperty('--x', `${(index * 47) % 101}%`);
-    petal.style.setProperty('--size', `${7 + (index % 6) * 2}px`);
-    petal.style.setProperty('--color', colors[index % colors.length]);
-    petal.style.setProperty('--duration', `${4.2 + (index % 8) * .3}s`);
-    petal.style.setProperty('--delay', `${(index % 14) * .08}s`);
-    petal.style.setProperty('--drift', `${((index * 29) % 180) - 90}px`);
-    petal.style.setProperty('--rotate', `${360 + (index % 5) * 160}deg`);
-    petals.append(petal);
-  }
-}
-
-receiveButton.addEventListener('click', () => {
-  finale.classList.add('has-arrived');
-  receiveButton.querySelector('span').textContent = '佳音已抵达';
-  finalAfter.textContent = '愿朱佳音，岁岁有回应，年年有佳音。';
-  releasePetals();
-  playFinalChime();
 });
+revealGift.addEventListener('click', () => document.querySelector('#finale').scrollIntoView({ behavior: 'smooth' }));
 
-// Slow luminous dust across the whole page.
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach((entry) => {
+    if (entry.isIntersecting) { entry.target.classList.add('is-visible'); revealObserver.unobserve(entry.target); }
+  });
+}, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
+document.querySelectorAll('.reveal, .reveal-image').forEach((element) => revealObserver.observe(element));
+
 const canvas = document.querySelector('#ambient');
 const context = canvas.getContext('2d');
-let particles = [];
-let canvasWidth = 0;
-let canvasHeight = 0;
+let particles = []; let width = 0; let height = 0;
 function resizeCanvas() {
   const ratio = Math.min(window.devicePixelRatio || 1, 2);
-  canvasWidth = window.innerWidth;
-  canvasHeight = window.innerHeight;
-  canvas.width = canvasWidth * ratio;
-  canvas.height = canvasHeight * ratio;
-  canvas.style.width = `${canvasWidth}px`;
-  canvas.style.height = `${canvasHeight}px`;
+  width = window.innerWidth; height = window.innerHeight;
+  canvas.width = width * ratio; canvas.height = height * ratio;
+  canvas.style.width = `${width}px`; canvas.style.height = `${height}px`;
   context.setTransform(ratio, 0, 0, ratio, 0, 0);
-  particles = Array.from({ length: Math.min(38, Math.max(20, Math.round(canvasWidth / 24))) }, (_, index) => ({
-    x: (index * 73) % canvasWidth,
-    y: (index * 137) % canvasHeight,
-    radius: .5 + (index % 4) * .45,
-    speed: .08 + (index % 5) * .025,
-    phase: index * .73,
+  particles = Array.from({ length: Math.min(42, Math.max(20, Math.round(width / 22))) }, (_, index) => ({
+    x: (index * 83) % width, y: (index * 149) % height, radius: 0.6 + (index % 4) * 0.55,
+    speed: 0.12 + (index % 5) * 0.035, phase: index * 0.71,
   }));
 }
-function paintAmbient(time = 0) {
-  context.clearRect(0, 0, canvasWidth, canvasHeight);
+function drawAmbient(time = 0) {
+  context.clearRect(0, 0, width, height);
   particles.forEach((particle) => {
-    particle.y -= particle.speed;
-    if (particle.y < -8) particle.y = canvasHeight + 8;
-    const x = particle.x + Math.sin(time * .00035 + particle.phase) * 13;
-    context.beginPath();
-    context.arc(x, particle.y, particle.radius, 0, Math.PI * 2);
-    context.fillStyle = `rgba(194, 238, 243, ${.15 + particle.radius * .11})`;
-    context.shadowColor = '#bfeef2';
-    context.shadowBlur = 8;
-    context.fill();
+    particle.y -= particle.speed; if (particle.y < -10) particle.y = height + 10;
+    const x = particle.x + Math.sin(time * 0.0004 + particle.phase) * 12;
+    context.beginPath(); context.arc(x, particle.y, particle.radius, 0, Math.PI * 2);
+    context.fillStyle = `rgba(175,231,244,${0.12 + particle.radius * 0.08})`; context.fill();
   });
-  requestAnimationFrame(paintAmbient);
+  requestAnimationFrame(drawAmbient);
 }
 window.addEventListener('resize', resizeCanvas, { passive: true });
-resizeCanvas();
-requestAnimationFrame(paintAmbient);
+resizeCanvas(); requestAnimationFrame(drawAmbient);
